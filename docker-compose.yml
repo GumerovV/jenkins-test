@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  gateway:
+    build: .
+    container_name: gateway-service
+    restart: unless-stopped
+    environment:
+      - ORDER_SERVICE_URL=http://order-service:3001
+    ports:
+      - "3000:3000"
+    networks:
+      - micro_net
+networks:
+  micro_net:
+    external: true
