@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 app.use(requestIdMiddleware);
 
 app.get('/ping', (req, res) => {
-    res.json({ message: 'pong from kubernetes' });
+    res.json({ message: 'pong' });
 });
 
 app.use('/api/auth-service', createProxyMiddleware({
