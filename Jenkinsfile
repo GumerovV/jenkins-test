@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        PATH = "/usr/local/bin:/opt/homebrew/bin:/Applications/Docker.app/Contents/Resources/bin:/usr/bin:/bin:/usr/sbin:/sbin"
         IMAGE_NAME = "gateway:latest"
     }
 
@@ -13,19 +14,25 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Check Docker') {
             steps {
-                sh '/usr/local/bin/docker build -t gateway:latest .'
+                sh 'docker --version'
             }
         }
 
-       stage('Deploy to Kubernetes') {
-           steps {
-               sh '''
-               /usr/local/bin/kubectl apply -f k8s/
-               /usr/local/bin/kubectl rollout restart deployment gateway
-               '''
-           }
-       }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME .'
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                kubectl apply -f k8s/
+                kubectl rollout restart deployment gateway
+                '''
+            }
+        }
     }
 }
