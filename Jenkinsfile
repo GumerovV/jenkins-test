@@ -15,17 +15,17 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                sh '/usr/local/bin/docker build -t gateway:latest .'
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh '''
-                kubectl apply -f k8s/
-                kubectl rollout restart deployment gateway
-                '''
-            }
-        }
+       stage('Deploy to Kubernetes') {
+           steps {
+               sh '''
+               /usr/local/bin/kubectl apply -f k8s/
+               /usr/local/bin/kubectl rollout restart deployment gateway
+               '''
+           }
+       }
     }
 }
