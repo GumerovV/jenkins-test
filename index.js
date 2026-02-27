@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/ping', (req, res) => {
-    res.json({ message: 'pong' });
+    res.json({ message: 'pong (jenkins)' });
 });
 
 app.use('/api/auth-service', createProxyMiddleware({
