@@ -2,23 +2,29 @@ pipeline {
     agent any
 
     environment {
-        PATH = "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+        IMAGE_NAME = "gateway:latest"
     }
 
     stages {
 
-        stage('Docker Compose Up') {
+        stage('Checkout') {
             steps {
-                sh '''
-                docker compose down || true
-                docker compose up -d --build
-                '''
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl apply -f k8s/'
+                sh '''
+                kubectl apply -f k8s/
+                kubectl rollout restart deployment gateway
+                '''
             }
         }
     }
