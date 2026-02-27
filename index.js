@@ -1,23 +1,11 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const logger = require('./logger.js');
 const requestIdMiddleware = require('./reqId.middleware.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(requestIdMiddleware);
-app.use((req, res, next) => {
-    logger.info({
-        message: 'Incoming request at gateway',
-        method: req.method,
-        url: req.originalUrl,
-        requestId: req.requestId,
-        body: req.body
-    });
-    req.headers['x-request-id'] = req.requestId;
-    next();
-});
 
 app.get('/ping', (req, res) => {
     res.json({ message: 'pong' });
